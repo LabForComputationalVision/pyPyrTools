@@ -1,18 +1,18 @@
-from pyramid import pyramid
+from .pyramid import pyramid
 import numpy
-from sp0Filters import sp0Filters
-from sp1Filters import sp1Filters
-from sp3Filters import sp3Filters
-from sp5Filters import sp5Filters
+from .sp0Filters import sp0Filters
+from .sp1Filters import sp1Filters
+from .sp3Filters import sp3Filters
+from .sp5Filters import sp5Filters
 import os
-from maxPyrHt import maxPyrHt
-from corrDn import corrDn
+from .maxPyrHt import maxPyrHt
+from .corrDn import corrDn
 import math
-from LB2idx import LB2idx
+from .LB2idx import LB2idx
 import matplotlib
-from showIm import showIm
-import JBhelpers
-from upConv import upConv
+from .showIm import showIm
+from . import JBhelpers
+from .upConv import upConv
 
 class Spyr(pyramid):
     filt = ''
@@ -24,7 +24,7 @@ class Spyr(pyramid):
         if len(args) > 0:
             self.image = numpy.array(args[0])
         else:
-            print "First argument (image) is required."
+            print("First argument (image) is required.")
             return
 
         #------------------------------------------------
@@ -40,14 +40,14 @@ class Spyr(pyramid):
             elif args[2] == 'sp5Filters':
                 filters = sp5Filters()
             elif os.path.isfile(args[2]):
-                print "Filter files not supported yet"
+                print("Filter files not supported yet")
                 return
             else:
-                print "filter parameters value %s not supported" % (args[2])
+                print("filter parameters value %s not supported" % (args[2]))
                 return
         else:
             filters = sp1Filters()
-
+            
         harmonics = filters['harmonics']
         lo0filt = filters['lo0filt']
         hi0filt = filters['hi0filt']
@@ -60,8 +60,8 @@ class Spyr(pyramid):
             if args[1] == 'auto':
                 ht = max_ht
             elif args[1] > max_ht:
-                print "Error: cannot build pyramid higher than %d levels." % (
-                    max_ht)
+                print("Error: cannot build pyramid higher than %d levels." % (
+                    max_ht))
                 return
             else:
                 ht = args[1]
@@ -115,20 +115,20 @@ class Spyr(pyramid):
     # methods
     def set(self, *args):
         if len(args) != 3:
-            print 'Error: three input parameters required:'
-            print '  set(band, location, value)'
-            print '  where band and value are integer and location is a tuple'
-        if isinstance(args[1], (int, long)):
+            print('Error: three input parameters required:')
+            print('  set(band, location, value)')
+            print('  where band and value are integer and location is a tuple')
+        if isinstance(args[1], int):
             self.pyr[args[0]][0][args[1]] = args[2]
         elif isinstance(args[1], tuple):
             self.pyr[args[0]][args[1][0]][args[1][1]] = args[2] 
         else:
-            print 'Error: location parameter must be int or tuple!'
+            print('Error: location parameter must be int or tuple!')
             return
 
     def spyrLev(self, lev):
         if lev < 0 or lev > self.spyrHt()-1:
-            print 'Error: level parameter must be between 0 and %d!' % (self.spyrHt()-1)
+            print('Error: level parameter must be between 0 and %d!' % (self.spyrHt()-1))
             return
         
         levArray = []
@@ -140,16 +140,16 @@ class Spyr(pyramid):
 
     def spyrBand(self, lev, band):
         if lev < 0 or lev > self.spyrHt()-1:
-            print 'Error: level parameter must be between 0 and %d!' % (self.spyrHt()-1)
+            print('Error: level parameter must be between 0 and %d!' % (self.spyrHt()-1))
             return
         if band < 0 or band > self.numBands()-1:
-            print 'Error: band parameter must be between 0 and %d!' % (self.numBands()-1)
+            print('Error: band parameter must be between 0 and %d!' % (self.numBands()-1))
 
         return self.band( ((lev*self.numBands())+band)+1 )
 
     def spyrHt(self):
         if len(self.pyrSize) > 2:
-            spHt = (len(self.pyrSize)-2)/self.numBands()
+            spHt = (len(self.pyrSize)-2)//self.numBands()
         else:
             spHt = 0
         return spHt
@@ -183,10 +183,10 @@ class Spyr(pyramid):
             elif args[0] == 'sp5Filters':
                 filters = sp5Filters()
             elif os.path.isfile(args[0]):
-                print "Filter files not supported yet"
+                print("Filter files not supported yet")
                 return
             else:
-                print "filter %s not supported" % (args[0])
+                print("filter %s not supported" % (args[0]))
                 return
         else:
             filters = sp1Filters()
@@ -218,22 +218,22 @@ class Spyr(pyramid):
         
         maxLev = 2 + self.spyrHt()
         if levs == 'all':
-            levs = numpy.array(range(maxLev))
+            levs = numpy.array(list(range(maxLev)))
         else:
             levs = numpy.array(levs)
             if (levs < 0).any() or (levs >= maxLev).any():
-                print "Error: level numbers must be in the range [0, %d]." % (maxLev-1)
+                print("Error: level numbers must be in the range [0, %d]." % (maxLev-1))
                 return
             else:
                 levs = numpy.array(levs)
                 if len(levs) > 1 and levs[0] < levs[1]:
                     levs = levs[::-1]  # we want smallest first
         if bands == 'all':
-            bands = numpy.array(range(self.numBands()))
+            bands = numpy.array(list(range(self.numBands())))
         else:
             bands = numpy.array(bands)
             if (bands < 0).any() or (bands > bfilts.shape[1]).any():
-                print "Error: band numbers must be in the range [0, %d]." % (self.numBands()-1)
+                print("Error: band numbers must be in the range [0, %d]." % (self.numBands()-1))
                 return
             else:
                 bands = numpy.array(bands)
@@ -359,10 +359,10 @@ class Spyr(pyramid):
             av = numpy.mean(band)
             stdev = numpy.sqrt( numpy.var(band) )
             prange[nind-1,:] = numpy.array([av-2*stdev, av+2*stdev])
-        elif isinstance(prange, basestring):
-            print "Error:Bad RANGE argument: %s'" % (prange)
+        elif isinstance(prange, str):
+            print("Error:Bad RANGE argument: %s'" % (prange))
         elif prange.shape[0] == 1 and prange.shape[1] == 2:
-            scales = numpy.power(scale, range(ht))
+            scales = numpy.power(scale, list(range(ht)))
             scales = numpy.outer( numpy.ones((nbands,1)), scales )
             scales = numpy.array([1, scales, numpy.power(scale, ht)])
             prange = numpy.outer(scales, prange)
@@ -381,13 +381,15 @@ class Spyr(pyramid):
             ncols = int(numpy.ceil((nbands+1)/2))
             nrows = int(numpy.ceil(nbands/2))
 
-        a = numpy.array(range(1-nrows, 1))
+        a = numpy.array(list(range(1-nrows, 1)))
         b = numpy.zeros((1,ncols))[0]
         ab = numpy.concatenate((a,b))
         c = numpy.zeros((1,nrows))[0]
-        d = range(-1, -ncols-1, -1)
+        d = list(range(-1, -ncols-1, -1))
         cd = numpy.concatenate((c,d))
         relpos = numpy.vstack((ab,cd)).T
+
+        relpos = relpos[[0,2]]
         
         if nbands > 1:
             mvpos = numpy.array([-1, -1]).reshape(1,2)
@@ -411,18 +413,23 @@ class Spyr(pyramid):
         # make position list positive, and allocate appropriate image:
         llpos = llpos - ((numpy.ones((nind,2)) * numpy.amin(llpos, axis=0)) + 1) + 1
         llpos[0,:] = numpy.array([1, 1])
-        urpos = llpos + self.pyrSize
+        urpos = numpy.array(llpos + self.pyrSize, dtype=int)
         d_im = numpy.zeros((numpy.amax(urpos), numpy.amax(urpos)))
         
         # paste bands into image, (im-r1)*(nshades-1)/(r2-r1) + 1.5
         nshades = 64;
 
+        llpos = numpy.array(llpos, dtype=int)
         for bnum in range(1,nind):
             mult = (nshades-1) / (prange[bnum,1]-prange[bnum,0])
+            # d_im[llpos[bnum,0]:urpos[bnum,0], 
+            #      llpos[bnum,1]:urpos[bnum,1]] = mult * self.band(bnum) + (1.5-mult*prange[bnum,0])
             d_im[llpos[bnum,0]:urpos[bnum,0], 
-                 llpos[bnum,1]:urpos[bnum,1]] = mult * self.band(bnum) + (1.5-mult*prange[bnum,0])
+                 llpos[bnum,1]:urpos[bnum,1]] = self.band(bnum)
 
+        print(d_im.max())
         if disp == 'qt':
-            showIm(d_im[:self.pyrSize[0][0]*2,:])
+            matplotlib.pyplot.imshow(d_im)
+            #showIm(d_im[:self.pyrSize[0][0]*2,:])
         elif disp == 'nb':
             JBhelpers.showIm(d_im[:self.pyrSize[0][0]*2,:])

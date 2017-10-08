@@ -8,12 +8,12 @@ def mkR(*args):
         Eero Simoncelli, 6/96.  Ported to Python by Rob Young, 5/14.  '''
     
     if len(args) == 0:
-        print 'Error: first input parameter is required!'
+        print('Error: first input parameter is required!')
         return
     else:
         sz = args[0]
 
-    if isinstance(sz, (int, long)) or len(sz) == 1:
+    if isinstance(sz, int) or len(sz) == 1:
         sz = (sz, sz)
 
     # -----------------------------------------------------------------
@@ -31,8 +31,8 @@ def mkR(*args):
 
     # -----------------------------------------------------------------
 
-    (xramp2, yramp2) = numpy.meshgrid(numpy.array(range(1,sz[1]+1))-origin[1], 
-                                   numpy.array(range(1,sz[0]+1))-origin[0])
+    (xramp2, yramp2) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-origin[1], 
+                                   numpy.array(list(range(1,sz[0]+1)))-origin[0])
 
     res = (xramp2**2 + yramp2**2)**(expt/2.0)
     

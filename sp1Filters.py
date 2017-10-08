@@ -16,8 +16,8 @@ def sp1Filters():
             TITLE = "A Filter Design Technique for 
                      Steerable Pyramid Image Transforms",
             AUTHOR = "A Karasaridis and E P Simoncelli",
-            BOOKTITLE = "ICASSP",	ADDRESS = "Atlanta, GA",
-            MONTH = "May",	YEAR = 1996 }  '''
+            BOOKTITLE = "ICASSP", ADDRESS = "Atlanta, GA",
+            MONTH = "May", YEAR = 1996 }  '''
     filters = {}
     filters['harmonics'] = numpy.array([ 1 ])
     filters['mtx'] = numpy.eye(2)

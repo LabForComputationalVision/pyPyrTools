@@ -11,8 +11,8 @@ def mkAngle(*args):
         if not isinstance(sz, tuple):
             sz = (sz, sz)
     else:
-        print "Error: first input parameter 'size' is required!"
-        print "makeAngle(size, phase, origin)"
+        print("Error: first input parameter 'size' is required!")
+        print("makeAngle(size, phase, origin)")
         return
 
     # ------------------------------------------------------------
@@ -30,8 +30,8 @@ def mkAngle(*args):
 
     #------------------------------------------------------------------
 
-    (xramp, yramp) = numpy.meshgrid(numpy.array(range(1,sz[1]+1))-origin[1], 
-                                 (numpy.array(range(1,sz[0]+1)))-origin[0])
+    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-origin[1], 
+                                 (numpy.array(list(range(1,sz[0]+1))))-origin[0])
     xramp = numpy.array(xramp)
     yramp = numpy.array(yramp)
 
