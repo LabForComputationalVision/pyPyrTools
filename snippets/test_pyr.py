@@ -9,11 +9,14 @@ from pyPyrTools import Spyr
 
 # im = array(imread('pizza.png')[:,:,0], dtype=float64)
 im = array(scipy.misc.imresize(imread('pizza.png')[:, :, 0], 0.25), dtype=float64)
-
-ion()
 imshow(im)
 
-pyr = Spyr(im, 3, 'sp3Filters')
+# im = zeros((13, 13), dtype=float64)
+# im[6, 6] = 1
+
+ion()
+
+pyr = Spyr(im, 1, 'sp5Filters')
 
 figure()
 subplot(1, 2, 1)
