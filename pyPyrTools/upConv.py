@@ -3,7 +3,7 @@ import ctypes
 import numpy
 
 # load the C library
-from pyPyrTools import lib
+import pyPyrTools
 
 
 def upConv(image=None, filt=None, edges='reflect1', step=(1, 1),
@@ -45,7 +45,7 @@ def upConv(image=None, filt=None, edges='reflect1', step=(1, 1),
     temp = numpy.zeros((filt.shape[1], filt.shape[0]))
 
     if edges == 'circular':
-        lib.internal_wrap_expand(image.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        pyPyrTools.lib.internal_wrap_expand(image.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                  filt.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                                  filt.shape[1], filt.shape[0], start[1],
                                  step[1], stop[1], start[0], step[0], stop[0],
@@ -53,7 +53,7 @@ def upConv(image=None, filt=None, edges='reflect1', step=(1, 1),
                                  stop[1], stop[0])
         result = result.T
     else:
-        lib.internal_expand(image.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        pyPyrTools.lib.internal_expand(image.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                             filt.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                             temp.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
                             filt.shape[1], filt.shape[0], start[1], step[1],

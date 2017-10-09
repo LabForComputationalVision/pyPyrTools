@@ -1,5 +1,4 @@
 import cmath
-# import pyPyrCcode
 import math
 import os
 
@@ -8,29 +7,31 @@ import numpy
 import pylab
 import scipy.misc
 
+from . import pyramid
+
 from . import JBhelpers
 # import pyPyrUtils as ppu
 from . import pyPyrUtils
 
 
-class pyramid:  # pyramid
-    # properties
-    pyr = []
-    pyrSize = []
-    pyrType = ''
-    image = ''
-
-    # constructor
-    def __init__(self):
-        print("please specify type of pyramid to create (Gpry, Lpyr, etc.)")
-        return
-
-    # methods
-    def nbands(self):
-        return len(self.pyr)
-
-    def band(self, bandNum):
-        return numpy.array(self.pyr[bandNum])
+# class pyramid:  # pyramid
+#     # properties
+#     pyr = []
+#     pyrSize = []
+#     pyrType = ''
+#     image = ''
+#
+#     # constructor
+#     def __init__(self):
+#         print("please specify type of pyramid to create (Gpry, Lpyr, etc.)")
+#         return
+#
+#     # methods
+#     def nbands(self):
+#         return len(self.pyr)
+#
+#     def band(self, bandNum):
+#         return numpy.array(self.pyr[bandNum])
 
 
 class Spyr(pyramid):

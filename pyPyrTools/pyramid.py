@@ -1,5 +1,6 @@
 import numpy
 
+
 class pyramid:  # pyramid
     # properties
     pyr = []
