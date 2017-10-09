@@ -12,6 +12,7 @@ setup(
     long_description="""pyPyrTools implements the steerable pyramid filter bank created by Simoncelli et alii in the glorious 1990s. Python library adapted from the original C and Matlab code by Rob Young.""",
     license="MIT",
     packages=find_packages(exclude=['tests*']),
+    install_requires=['numpy'],
     extras_require={
         'lxml': ['lxml'],
         'html5lib': ['html5lib'],

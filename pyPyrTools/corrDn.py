@@ -2,11 +2,8 @@ import ctypes
 
 import numpy
 
-
 # load the C library
-# lib = ctypes.cdll.LoadLibrary(os.path.dirname(os.path.realpath(__file__)) +
-#                              '/wrapConv.so')
-
+from pyPyrTools import lib
 
 
 def corrDn(image=None, filt=None, edges='reflect1', step=(1, 1),

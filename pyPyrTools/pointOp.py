@@ -2,10 +2,9 @@ import ctypes
 
 import numpy
 
-
 # load the C library
-# lib = ctypes.cdll.LoadLibrary(os.path.dirname(os.path.realpath(__file__)) +
-#                               '/wrapConv.so')
+from pyPyrTools import lib
+
 
 def pointOp(image, lut, origin, increment, warnings):
     result = numpy.zeros((image.shape[0], image.shape[1]))
