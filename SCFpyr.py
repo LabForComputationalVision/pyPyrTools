@@ -67,16 +67,16 @@ class SCFpyr(SFpyr):
         #------------------------------------------------------
         
         dims = numpy.array(self.image.shape)
-        ctr = numpy.ceil((numpy.array(dims)+0.5)/2)
+        ctr = numpy.ceil((numpy.array(dims)+0.5)/2).astype('int')
         
-        (xramp, yramp) = numpy.meshgrid((numpy.array(range(1,dims[1]+1))-ctr[1])/
-                                     (dims[1]/2), 
+        (xramp, yramp) = numpy.meshgrid((numpy.array(range(1, dims[1]+1))-ctr[1])/
+                                     (dims[1]/2.),
                                      (numpy.array(range(1,dims[0]+1))-ctr[0])/
-                                     (dims[0]/2))
+                                     (dims[0]/2.))
         angle = numpy.arctan2(yramp, xramp)
         log_rad = numpy.sqrt(xramp**2 + yramp**2)
         log_rad[ctr[0]-1, ctr[1]-1] = log_rad[ctr[0]-1, ctr[1]-2]
-        log_rad = numpy.log2(log_rad);
+        log_rad = numpy.log2(log_rad)
 
         ## Radial transition function (a raised cosine in log-frequency):
         (Xrcos, Yrcos) = rcosFn(twidth, (-twidth/2.0), numpy.array([0,1]))
@@ -134,11 +134,11 @@ class SCFpyr(SFpyr):
                 self.pyrSize.append(band.shape)
 
             dims = numpy.array(lodft.shape)
-            ctr = numpy.ceil((dims+0.5)/2)
-            lodims = numpy.ceil((dims-0.5)/2)
-            loctr = numpy.ceil((lodims+0.5)/2)
-            lostart = ctr - loctr
-            loend = lostart + lodims
+            ctr = numpy.ceil((dims+0.5)/2).astype('int')
+            lodims = numpy.ceil((dims-0.5)/2).astype('int')
+            loctr = numpy.ceil((lodims+0.5)/2).astype('int')
+            lostart = (ctr - loctr)
+            loend = (lostart + lodims).astype('int')
 
             log_rad = log_rad[lostart[0]:loend[0], lostart[1]:loend[1]]
             angle = angle[lostart[0]:loend[0], lostart[1]:loend[1]]

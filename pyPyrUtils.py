@@ -13,7 +13,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 import JBhelpers
 import PIL
-import ImageTk
+from PIL import ImageTk
 import Tkinter
 import ctypes
 lib = ctypes.cdll.LoadLibrary('./wrapConv.so')
