@@ -10,7 +10,7 @@ def upConv(image = None, filt = None, edges = 'reflect1', step = (1,1),
            start = (0,0), stop = None, result = None):
 
     if image is None or filt is None:
-        print 'Error: image and filter are required input parameters!'
+        print('Error: image and filter are required input parameters!')
         return
     else:
         image = image.copy()
@@ -29,7 +29,7 @@ def upConv(image = None, filt = None, edges = 'reflect1', step = (1,1),
             filt = numpy.append(filt,0.0);
             filt = numpy.reshape(filt, (1, len(filt)))
         else:
-            print 'Even sized 2D filters not yet supported by upConv.'
+            print('Even sized 2D filters not yet supported by upConv.')
             return
 
     if stop is None and result is None:

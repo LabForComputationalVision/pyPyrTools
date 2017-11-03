@@ -11,10 +11,10 @@ import re
 import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
-import JBhelpers
+from . import JBhelpers
 import PIL
 from PIL import ImageTk
-import Tkinter
+import tkinter
 import ctypes
 lib = ctypes.cdll.LoadLibrary('./wrapConv.so')
 
@@ -37,7 +37,7 @@ def maxPyrHt_old(imsz, filtsz):
         imsz = (imsz[0], 1)
         filtsz = (filtsz[0], 1)
     elif len(imsz) == 1 and not any(f == 1 for f in filtsz):
-            print "Error: cannot have a 1D 'image' and 2D filter"
+            print("Error: cannot have a 1D 'image' and 2D filter")
             exit(1)
     elif len(imsz) == 1:
         imsz = (imsz[0], 1)
@@ -109,7 +109,7 @@ def maxPyrHt(imsz, filtsz):
 # returns a vector of binomial coefficients of order (size-1)
 def binomialFilter(size):
     if size < 2:
-        print "Error: size argument must be larger than 1"
+        print("Error: size argument must be larger than 1")
         exit(1)
     
     kernel = numpy.array([[0.5], [0.5]])
@@ -171,7 +171,7 @@ def namedFilter(name):
     elif name is "gauss3":  # for backward-compatibility
         kernel = math.sqrt(2) * numpy.array([[0.25], [0.5], [0.25]])
     else:
-        print "Error: Bad filter name: %s" % (name)
+        print("Error: Bad filter name: %s" % (name))
         exit(1)
     return numpy.array(kernel)
 
@@ -181,15 +181,15 @@ def strictly_decreasing(L):
 def compareRecon(recon1, recon2):
     prec = -11
     if recon1.shape != recon2.shape:
-        print 'shape is different!'
-        print recon1.shape
-        print recon2.shape
+        print('shape is different!')
+        print(recon1.shape)
+        print(recon2.shape)
         return 0
 
     for i in range(recon1.shape[0]):
         for j in range(recon2.shape[1]):
             if numpy.absolute(recon1[i,j].real - recon2[i,j].real) > math.pow(10,-11):
-                print "real: i=%d j=%d %.15f %.15f diff=%.15f" % (i, j, recon1[i,j].real, recon2[i,j].real, numpy.absolute(recon1[i,j].real-recon2[i,j].real))
+                print("real: i=%d j=%d %.15f %.15f diff=%.15f" % (i, j, recon1[i,j].real, recon2[i,j].real, numpy.absolute(recon1[i,j].real-recon2[i,j].real)))
                 return 0
             ## FIX: need a better way to test
             # if we have many significant digits to the left of decimal we 
@@ -200,9 +200,9 @@ def compareRecon(recon1, recon2):
                     prec = prec + int(math.log(numpy.abs(recon1[i,j].imag), 10))
                     if prec > 0:
                         prec = -1
-                print prec
+                print(prec)
                 if numpy.absolute(recon1[i,j].imag - recon2[i,j].imag) > math.pow(10, prec):
-                    print "imag: i=%d j=%d %.15f %.15f diff=%.15f" % (i, j, recon1[i,j].imag, recon2[i,j].imag, numpy.absolute(recon1[i,j].imag-recon2[i,j].imag))
+                    print("imag: i=%d j=%d %.15f %.15f diff=%.15f" % (i, j, recon1[i,j].imag, recon2[i,j].imag, numpy.absolute(recon1[i,j].imag-recon2[i,j].imag)))
                     return 0
 
     return 1
@@ -221,7 +221,7 @@ def comparePyr(matPyr, pyPyr):
             pySz += sz[0] * sz[1]
 
     if(matSz != pySz):
-        print "size difference: %d != %d, returning 0" % (matSz, pySz)
+        print("size difference: %d != %d, returning 0" % (matSz, pySz))
         return 0
 
     # values are the same?
@@ -236,15 +236,15 @@ def comparePyr(matPyr, pyPyr):
         matTmp = numpy.reshape(matTmp, bandSz, order='F')
         matStart = matStart+matLen
         if (matTmp != pyPyr.pyr[idx]).any():
-            print "some pyramid elements not identical: checking..."
+            print("some pyramid elements not identical: checking...")
             for i in range(bandSz[0]):
                 for j in range(bandSz[1]):
                     if matTmp[i,j] != pyPyr.pyr[idx][i,j]:
                         if ( math.fabs(matTmp[i,j] - pyPyr.pyr[idx][i,j]) > 
                              prec ):
-                            print "failed level:%d element:%d %d value:%.15f %.15f" % (idx, i, j, matTmp[i,j], pyPyr.pyr[idx][i,j])
+                            print("failed level:%d element:%d %d value:%.15f %.15f" % (idx, i, j, matTmp[i,j], pyPyr.pyr[idx][i,j]))
                             return 0
-            print "same to at least %f" % prec
+            print("same to at least %f" % prec)
 
     return 1
 
@@ -260,15 +260,15 @@ def mkAngularSine(*args):
     # Eero Simoncelli, 2/97.  Python port by Rob Young, 7/15.
 
     if len(args) == 0:
-        print "mkAngularSine(SIZE, HARMONIC, AMPL, PHASE, ORIGIN)"
-        print "first argument is required"
+        print("mkAngularSine(SIZE, HARMONIC, AMPL, PHASE, ORIGIN)")
+        print("first argument is required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
 
     # OPTIONAL args:
@@ -311,15 +311,15 @@ def mkGaussian(*args):
 # Eero Simoncelli, 6/96. Python port by Rob Young, 7/15.
 
     if len(args) == 0:
-        print "mkRamp(SIZE, COVARIANCE, MEAN, AMPLITUDE)"
-        print "first argument is required"
+        print("mkRamp(SIZE, COVARIANCE, MEAN, AMPLITUDE)")
+        print("first argument is required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
 
     # OPTIONAL args:
@@ -343,14 +343,14 @@ def mkGaussian(*args):
 
     #---------------------------------------------------------------
         
-    (xramp, yramp) = numpy.meshgrid(numpy.array(range(1,sz[1]+1))-mn[1], 
-                                    numpy.array(range(1,sz[0]+1))-mn[0])
+    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-mn[1], 
+                                    numpy.array(list(range(1,sz[0]+1)))-mn[0])
 
-    if isinstance(cov, (int, long, float)):
+    if isinstance(cov, (int, float)):
         if 'norm' == ampl:
             ampl = 1.0 / (2.0 * numpy.pi * cov)
         e = ( (xramp**2) + (yramp**2) ) / ( -2.0 * cov )
-    elif len(cov) == 2 and isinstance(cov[0], (int, long, float)):
+    elif len(cov) == 2 and isinstance(cov[0], (int, float)):
         if 'norm' == ampl:
             if cov[0]*cov[1] < 0:
                 ampl = 1.0 / (2.0 * numpy.pi * 
@@ -391,15 +391,15 @@ def mkDisc(*args):
  # Eero Simoncelli, 6/96. Python port by Rob Young, 7/15.
 
     if len(args) == 0:
-        print "mkDisc(SIZE, RADIUS, ORIGIN, TWIDTH, VALS)"
-        print "first argument is required"
+        print("mkDisc(SIZE, RADIUS, ORIGIN, TWIDTH, VALS)")
+        print("first argument is required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
 
     # OPTIONAL args:
@@ -454,20 +454,20 @@ def mkSine(*args):
     # REQUIRED args:
 
     if len(args) < 2:
-        print "mkSine(SIZE, PERIOD, DIRECTION, AMPLITUDE, PHASE, ORIGIN)"
-        print "       or"
-        print "mkSine(SIZE, FREQ, AMPLITUDE, PHASE, ORIGIN)"
-        print "first two arguments are required"
+        print("mkSine(SIZE, PERIOD, DIRECTION, AMPLITUDE, PHASE, ORIGIN)")
+        print("       or")
+        print("mkSine(SIZE, FREQ, AMPLITUDE, PHASE, ORIGIN)")
+        print("first two arguments are required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
 
-    if isinstance(args[1], (int, float, long)):
+    if isinstance(args[1], (int, float)):
         frequency = (2.0 * numpy.pi) / args[1]
         # OPTIONAL args:
         if len(args) > 2:
@@ -526,15 +526,15 @@ def mkZonePlate(*args):
     # REQUIRED ARGS:
 
     if len(args) == 0:
-        print "mkZonePlate(SIZE, AMPL, PHASE)"
-        print "first argument is required"
+        print("mkZonePlate(SIZE, AMPL, PHASE)")
+        print("first argument is required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
     
     #---------------------------------------------------------------------
@@ -576,20 +576,20 @@ def mkSquare(*args):
     # REQUIRED ARGS:
 
     if len(args) < 2:
-        print "mkSquare(SIZE, PERIOD, DIRECTION, AMPLITUDE, PHASE, ORIGIN, TWIDTH)"
-        print "       or"
-        print "mkSquare(SIZE, FREQ, AMPLITUDE, PHASE, ORIGIN, TWIDTH)"
-        print "first two arguments are required"
+        print("mkSquare(SIZE, PERIOD, DIRECTION, AMPLITUDE, PHASE, ORIGIN, TWIDTH)")
+        print("       or")
+        print("mkSquare(SIZE, FREQ, AMPLITUDE, PHASE, ORIGIN, TWIDTH)")
+        print("first two arguments are required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
     
-    if isinstance(args[1], (int, float, long)):
+    if isinstance(args[1], (int, float)):
         frequency = (2.0 * numpy.pi) / args[1]
         # OPTIONAL args:
         if len(args) > 2:
@@ -659,15 +659,15 @@ def mkRamp(*args):
     # optional
     
     if len(args) == 0:
-        print "mkRamp(SIZE, DIRECTION, SLOPE, INTERCEPT, ORIGIN)"
-        print "first argument is required"
+        print("mkRamp(SIZE, DIRECTION, SLOPE, INTERCEPT, ORIGIN)")
+        print("first argument is required")
         exit(1)
     else:
         sz = args[0]
         if isinstance(sz, (int)):
             sz = (sz, sz)
         elif not isinstance(sz, (tuple)):
-            print "first argument must be a two element tuple or an integer"
+            print("first argument must be a two element tuple or an integer")
             exit(1)
 
     # OPTIONAL args:
@@ -697,8 +697,8 @@ def mkRamp(*args):
     xinc = slope * math.cos(direction)
     yinc = slope * math.sin(direction)
 
-    [xramp, yramp] = numpy.meshgrid( xinc * (numpy.array(range(sz[1]))-origin[1]),
-                                  yinc * (numpy.array(range(sz[0]))-origin[0]) )
+    [xramp, yramp] = numpy.meshgrid( xinc * (numpy.array(list(range(sz[1])))-origin[1]),
+                                  yinc * (numpy.array(list(range(sz[0])))-origin[0]) )
 
     res = intercept + xramp + yramp
 
@@ -1568,8 +1568,8 @@ def nextSz(size, sizeList):
 def mkImpulse(*args):
     # create an image that is all zeros except for an impulse
     if(len(args) == 0):
-        print "mkImpulse(size, origin, amplitude)"
-        print "first input parameter is required"
+        print("mkImpulse(size, origin, amplitude)")
+        print("first input parameter is required")
         return
     
     if(isinstance(args[0], int)):
@@ -1577,7 +1577,7 @@ def mkImpulse(*args):
     elif(isinstance(args[0], tuple)):
         sz = args[0]
     else:
-        print "size parameter must be either an integer or a tuple"
+        print("size parameter must be either an integer or a tuple")
         return
 
     if(len(args) > 1):
@@ -1606,7 +1606,7 @@ def mkImpulse(*args):
 def steer2HarmMtx(*args):
 
     if len(args) == 0:
-        print "Error: first parameter 'harmonics' is required."
+        print("Error: first parameter 'harmonics' is required.")
         return
     
     if len(args) > 0:
@@ -1617,19 +1617,19 @@ def steer2HarmMtx(*args):
     if len(args) > 1:
         angles = args[1]
     else:
-        angles = numpy.pi * numpy.array(range(numh)) / numh
+        angles = numpy.pi * numpy.array(list(range(numh))) / numh
         
     if len(args) > 2:
-        if isinstance(args[2], basestring):
+        if isinstance(args[2], str):
             if args[2] == 'even' or args[2] == 'EVEN':
                 evenorodd = 0
             elif args[2] == 'odd' or args[2] == 'ODD':
                 evenorodd = 1
             else:
-                print "Error: only 'even' and 'odd' are valid entries for the third input parameter."
+                print("Error: only 'even' and 'odd' are valid entries for the third input parameter.")
                 return
         else:
-            print "Error: third input parameter must be a string (even/odd)."
+            print("Error: third input parameter must be a string (even/odd).")
     else:
         evenorodd = 0
 
@@ -1653,7 +1653,7 @@ def steer2HarmMtx(*args):
 
     r = numpy.rank(imtx)
     if r != numh and r != angles.shape[0]:
-        print "Warning: matrix is not full rank"
+        print("Warning: matrix is not full rank")
 
     mtx = numpy.linalg.pinv(imtx)
     
@@ -1692,7 +1692,7 @@ def rcosFn(*args):
 
     sz = 256   # arbitrary!
 
-    X = numpy.pi * numpy.array(range(-sz-1,2)) / (2*sz)
+    X = numpy.pi * numpy.array(list(range(-sz-1,2))) / (2*sz)
 
     Y = values[0] + (values[1]-values[0]) * numpy.cos(X)**2;
 
@@ -1715,8 +1715,8 @@ def mkAngle(*args):
         if not isinstance(sz, tuple):
             sz = (sz, sz)
     else:
-        print "Error: first input parameter 'size' is required!"
-        print "makeAngle(size, phase, origin)"
+        print("Error: first input parameter 'size' is required!")
+        print("makeAngle(size, phase, origin)")
         return
 
     # ------------------------------------------------------------
@@ -1734,8 +1734,8 @@ def mkAngle(*args):
 
     #------------------------------------------------------------------
 
-    (xramp, yramp) = numpy.meshgrid(numpy.array(range(1,sz[1]+1))-origin[1], 
-                                 (numpy.array(range(1,sz[0]+1)))-origin[0])
+    (xramp, yramp) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-origin[1], 
+                                 (numpy.array(list(range(1,sz[0]+1))))-origin[0])
     xramp = numpy.array(xramp)
     yramp = numpy.array(yramp)
 
@@ -1754,7 +1754,7 @@ def mkAngle(*args):
 def modulateFlip(*args):
 
     if len(args) == 0:
-        print "Error: filter input parameter required."
+        print("Error: filter input parameter required.")
         return
 
     lfilt = args[0]
@@ -1764,13 +1764,13 @@ def modulateFlip(*args):
     elif lfilt.shape[0] == 1:
         lfilt = lfilt.reshape(lfilt.shape[1], 1)
     elif len(lfilt.shape) > 2 or lfilt.shape[1] != 1:
-        print 'Error: only 1D input supported.'
+        print('Error: only 1D input supported.')
         return
 
     sz = len(lfilt)
     sz2 = numpy.ceil(sz/2.0);
 
-    ind = numpy.array(range(sz-1,-1,-1))
+    ind = numpy.array(list(range(sz-1,-1,-1)))
 
     hfilt = lfilt[ind].T * (-1)**((ind+1)-sz2)
 
@@ -1794,7 +1794,7 @@ def modulateFlip(*args):
 # function res = blurDn(im, nlevs, filt)
 def blurDn(*args):
     if len(args) == 0:
-        print "Error: image input parameter required."
+        print("Error: image input parameter required.")
         return
 
     im = numpy.array(args[0])
@@ -1807,7 +1807,7 @@ def blurDn(*args):
 
     if len(args) > 2:
         filt = args[2]
-        if isinstance(filt, basestring):
+        if isinstance(filt, str):
             filt = namedFilter(filt)
     else:
         filt = namedFilter('binom5')
@@ -1827,7 +1827,7 @@ def blurDn(*args):
             # 1D image
             if len(filt.shape) > 1 and (filt.shape[1]!=1 and filt.shape[2]!=1):
                 # >1D filter
-                print 'Error: Cannot apply 2D filter to 1D signal'
+                print('Error: Cannot apply 2D filter to 1D signal')
                 return
             # orient filter and image correctly
             if im.shape[0] == 1:
@@ -1869,8 +1869,8 @@ def blur(*args):
 
     # REQUIRED ARG:
     if len(args) == 0:
-        print "blur(IM, LEVELS, FILT)"
-        print "first argument is required"
+        print("blur(IM, LEVELS, FILT)")
+        print("first argument is required")
         exit(1)
     else:
         im = numpy.array(args[0])
@@ -1882,7 +1882,7 @@ def blur(*args):
         nlevs = 1
 
     if len(args) > 2:
-        if isinstance(args[2], basestring):
+        if isinstance(args[2], str):
             filt = namedFilter(args[2])
         else:
             filt = numpy.array(args[2])
@@ -1900,7 +1900,7 @@ def blur(*args):
         if len(im.shape) == 1 or im.shape[0] == 1 or im.shape[1] == 1: 
             # 1D image
             if len(filt) == 2 and (numpy.asarray(filt.shape) != 1).any():
-                print 'Error: can not apply 2D filter to 1D signal'
+                print('Error: can not apply 2D filter to 1D signal')
                 return
             
             imIn = corrDn(im, filt, 'reflect1', len(im))
@@ -1941,7 +1941,7 @@ def rconv2(*args):
     #       1   (DIM/2)+1  
     
     if len(args) < 2:
-        print "Error: two matrices required as input parameters"
+        print("Error: two matrices required as input parameters")
         return
 
     if len(args) == 2:
@@ -1956,7 +1956,7 @@ def rconv2(*args):
         large = args[1]
         small = args[0]
     else:
-        print 'one arg must be larger than the other in both dimensions!'
+        print('one arg must be larger than the other in both dimensions!')
         return
 
     ly = large.shape[0]
@@ -1992,7 +1992,7 @@ def rconv2(*args):
 # compute minimum and maximum values of input matrix, returning them as tuple
 def range2(*args):
     if not numpy.isreal(args[0]).all():
-        print 'Error: matrix must be real-valued'
+        print('Error: matrix must be real-valued')
 
     return (args[0].min(), args[0].max())
 
@@ -2017,7 +2017,7 @@ def var2(*args):
 #  MEAN (optional) and VAR (optional) make the computation faster.
 def kurt2(*args):
     if len(args) == 0:
-        print 'Error: input matrix is required'
+        print('Error: input matrix is required')
 
     if len(args) < 2:
         mn = args[0].mean()
@@ -2045,16 +2045,16 @@ def kurt2(*args):
 def imStats(*args):
 
     if len(args) == 0:
-        print 'Error: at least one input image is required'
+        print('Error: at least one input image is required')
         return
     elif len(args) == 1 and not numpy.isreal(args[0]).all():
-        print 'Error: input images must be real-valued matrices'
+        print('Error: input images must be real-valued matrices')
         return
     elif len(args) == 2 and ( not numpy.isreal(args[0]).all() or not numpy.isreal(args[1]).all()):
-        print 'Error: input images must be real-valued matrices'
+        print('Error: input images must be real-valued matrices')
         return
     elif len(args) > 2:
-        print 'Error: maximum of two input images allowed'
+        print('Error: maximum of two input images allowed')
         return
 
     if len(args) == 2:
@@ -2066,18 +2066,18 @@ def imStats(*args):
             snr = numpy.inf
         else:
             snr = 10 * numpy.log10(var2(args[0])/v)
-        print 'Difference statistics:'
-        print '  Range: [%d, %d]' % (mn, mx)
-        print '  Mean: %f,  Stdev (rmse): %f,  SNR (dB): %f' % (mean, numpy.sqrt(v), snr)
+        print('Difference statistics:')
+        print('  Range: [%d, %d]' % (mn, mx))
+        print('  Mean: %f,  Stdev (rmse): %f,  SNR (dB): %f' % (mean, numpy.sqrt(v), snr))
     else:
         (mn, mx) = range2(args[0])
         mean = args[0].mean()
         var = var2(args[0])
         stdev = numpy.sqrt(var.real) + numpy.sqrt(var.imag)
         kurt = kurt2(args[0], mean, stdev**2)
-        print 'Image statistics:'
-        print '  Range: [%f, %f]' % (mn, mx)
-        print '  Mean: %f,  Stdev: %f,  Kurtosis: %f' % (mean, stdev, kurt)
+        print('Image statistics:')
+        print('  Range: [%f, %f]' % (mn, mx))
+        print('  Mean: %f,  Stdev: %f,  Kurtosis: %f' % (mean, stdev, kurt))
         
 # makes image the same as read in by matlab
 def correctImage(img):
@@ -2114,12 +2114,12 @@ def shift(mtx, offset):
 # Eero Simoncelli, 6/96.  Ported to Python by Rob Young, 5/14.
 def mkR(*args):
     if len(args) == 0:
-        print 'Error: first input parameter is required!'
+        print('Error: first input parameter is required!')
         return
     else:
         sz = args[0]
 
-    if isinstance(sz, (int, long)) or len(sz) == 1:
+    if isinstance(sz, int) or len(sz) == 1:
         sz = (sz, sz)
 
     # -----------------------------------------------------------------
@@ -2137,8 +2137,8 @@ def mkR(*args):
 
     # -----------------------------------------------------------------
 
-    (xramp2, yramp2) = numpy.meshgrid(numpy.array(range(1,sz[1]+1))-origin[1], 
-                                   numpy.array(range(1,sz[0]+1))-origin[0])
+    (xramp2, yramp2) = numpy.meshgrid(numpy.array(list(range(1,sz[1]+1)))-origin[1], 
+                                   numpy.array(list(range(1,sz[0]+1)))-origin[0])
 
     res = (xramp2**2 + yramp2**2)**(expt/2.0)
     
@@ -2155,9 +2155,9 @@ def mkR(*args):
 
 def mkFract(*args):
     if len(args) == 0:
-        print 'Error: input parameter dims required'
+        print('Error: input parameter dims required')
     else:
-        if isinstance(args[0], (int, long)) or len(args[0]) == 1:
+        if isinstance(args[0], int) or len(args[0]) == 1:
             dims = (args[0], args[0])
         elif args[0] == 1:
             dims = (args[1], args[1])
@@ -2185,7 +2185,7 @@ def mkFract(*args):
 
     #if any(max(max(abs(fres.imag))) > 1e-10):
     if abs(fres.imag).max() > 1e-10:
-        print 'Symmetry error in creating fractal'
+        print('Symmetry error in creating fractal')
     else:
         res = numpy.real(fres)
         res = res / numpy.sqrt(var2(res))
@@ -2213,7 +2213,7 @@ def mkFract(*args):
 def steer(*args):
     
     if len(args) < 2:
-        print 'Error: input parameters basis and angle are required!'
+        print('Error: input parameters basis and angle are required!')
         return
 
     basis = args[0]
@@ -2222,34 +2222,34 @@ def steer(*args):
 
     #if ( any(size(angle) ~= [size(basis,1) 1]) & any(size(angle) ~= [1 1]) )
     angle = args[1]
-    if isinstance(angle, (int, long, float)):
+    if isinstance(angle, (int, float)):
         angle = numpy.array([angle])
     else:
         if angle.shape[0] != basis.shape[0] or angle.shape[1] != 1:
-            print 'ANGLE must be a scalar, or a column vector the size of the basis elements'
+            print('ANGLE must be a scalar, or a column vector the size of the basis elements')
             return
 
     # If HARMONICS are not passed, assume derivatives.
     if len(args) < 3:
         if num%2 == 0:
-            harmonics = numpy.array(range(num/2))*2+1
+            harmonics = numpy.array(list(range(num/2)))*2+1
         else:
-            harmonics = numpy.array(range((15+1)/2))*2
+            harmonics = numpy.array(list(range((15+1)/2)))*2
     else:
         harmonics = args[2]
     if len(harmonics.shape) == 1 or harmonics.shape[0] == 1:
         harmonics = harmonics.reshape(harmonics.shape[0], 1)
     elif harmonics.shape[0] != 1 and harmonics.shape[1] != 1:
-        print 'Error: input parameter HARMONICS must be 1D!'
+        print('Error: input parameter HARMONICS must be 1D!')
         return
 
     if 2*harmonics.shape[0] - (harmonics == 0).sum() != num:
-        print 'harmonics list is incompatible with basis size!'
+        print('harmonics list is incompatible with basis size!')
         return
 
     # If STEERMTX not passed, assume evenly distributed cosine-phase filters:
     if len(args) < 4:
-        steermtx = steer2HarmMtx(harmonics, numpy.pi*numpy.array(range(num))/num, 
+        steermtx = steer2HarmMtx(harmonics, numpy.pi*numpy.array(list(range(num)))/num, 
                                  'even')
     else:
         steermtx = args[3]
@@ -2257,12 +2257,12 @@ def steer(*args):
     steervect = numpy.zeros((angle.shape[0], num))
     arg = angle * harmonics[numpy.nonzero(harmonics)[0]].T
     if all(harmonics):
-	steervect[:, range(0,num,2)] = numpy.cos(arg)
-	steervect[:, range(1,num,2)] = numpy.sin(arg)
+	steervect[:, list(range(0,num,2))] = numpy.cos(arg)
+	steervect[:, list(range(1,num,2))] = numpy.sin(arg)
     else:
 	steervect[:, 1] = numpy.ones((arg.shape[0],1))
-	steervect[:, range(0,num,2)] = numpy.cos(arg)
-	steervect[:, range(1,num,2)] = numpy.sin(arg)
+	steervect[:, list(range(0,num,2))] = numpy.cos(arg)
+	steervect[:, list(range(1,num,2))] = numpy.sin(arg)
 
     steervect = numpy.dot(steervect,steermtx)
 
@@ -2277,33 +2277,33 @@ def steer(*args):
 def showIm_old(*args):
     # check and set input parameters
     if len(args) == 0:
-        print "showIm( matrix, range, zoom, label, nshades )"
-        print "  matrix is string. It should be the name of a 2D array."
-        print "  range is a two element tuple.  It specifies the values that "
-        print "    map to the min and max colormap values.  Passing a value "
-        print "    of 'auto' (default) sets range=[min,max].  'auto2' sets "
-        print "    range=[mean-2*stdev, mean+2*stdev].  'auto3' sets "
-        print "    range=[p1-(p2-p1)/8, p2+(p2-p1)/8], where p1 is the 10th "
-        print "    percientile value of the sorted matix samples, and p2 is "
-        print "    the 90th percentile value."
-        print "  zoom specifies the number of matrix samples per screen pixel."
-        print "    It will be rounded to an integer, or 1 divided by an "
-        print "    integer."
+        print("showIm( matrix, range, zoom, label, nshades )")
+        print("  matrix is string. It should be the name of a 2D array.")
+        print("  range is a two element tuple.  It specifies the values that ")
+        print("    map to the min and max colormap values.  Passing a value ")
+        print("    of 'auto' (default) sets range=[min,max].  'auto2' sets ")
+        print("    range=[mean-2*stdev, mean+2*stdev].  'auto3' sets ")
+        print("    range=[p1-(p2-p1)/8, p2+(p2-p1)/8], where p1 is the 10th ")
+        print("    percientile value of the sorted matix samples, and p2 is ")
+        print("    the 90th percentile value.")
+        print("  zoom specifies the number of matrix samples per screen pixel.")
+        print("    It will be rounded to an integer, or 1 divided by an ")
+        print("    integer.")
         #print "    A value of 'same' or 'auto' (default) causes the "
         #print "    zoom value to be chosen automatically to fit the image into"
         #print "    the current axes."
         #print "    A value of 'full' fills the axis region "
         #print "    (leaving no room for labels)."
-        print "  label - A string that is used as a figure title."
-        print "  NSHADES (optional) specifies the number of gray shades, "
-        print "    and defaults to the size of the current colormap. "
+        print("  label - A string that is used as a figure title.")
+        print("  NSHADES (optional) specifies the number of gray shades, ")
+        print("    and defaults to the size of the current colormap. ")
 
     if len(args) > 0:   # matrix entered
         matrix = numpy.array(args[0])
     #print 'showIm range %f %f' % (matrix.min(), matrix.max())
 
     if len(args) > 1:   # range entered
-        if isinstance(args[1], basestring):
+        if isinstance(args[1], str):
             if args[1] is "auto":
                 imRange = ( numpy.amin(matrix), numpy.amax(matrix) )
             elif args[1] is "auto2":
@@ -2316,10 +2316,10 @@ def showIm_old(*args):
                 p2 = scipy.stats.scoreatpercentile(numpy.hstack(matrix), 90)
                 imRange = (p1-(p2-p1)/8.0, p2+(p2-p1)/8.0)
             else:
-                print "Error: range of %s is not recognized." % args[1]
-                print "       please use a two element tuple or "
-                print "       'auto', 'auto2' or 'auto3'"
-                print "       enter 'showIm' for more info about options"
+                print("Error: range of %s is not recognized." % args[1])
+                print("       please use a two element tuple or ")
+                print("       'auto', 'auto2' or 'auto3'")
+                print("       enter 'showIm' for more info about options")
                 return
         else:
             imRange = args[1][0], args[1][1]
@@ -2363,7 +2363,7 @@ def showIm_old(*args):
     
     # make colormap
     incr = (256/nshades)+1
-    colors = range(0,255,(256/nshades)+1)
+    colors = list(range(0,255,(256/nshades)+1))
     colors[-1] = 255
     colctr = -1
     for i in range(256):
@@ -2375,9 +2375,9 @@ def showIm_old(*args):
     # zoom
     #dims = (matrix.shape[0]*zoom, matrix.shape[1]*zoom)
     dims = (nRows*zoom, nCols*zoom)
-    print 'dims'
-    print dims
-    print 'nRows=%d nCols=%d' % (nRows, nCols)
+    print('dims')
+    print(dims)
+    print('nRows=%d nCols=%d' % (nRows, nCols))
     #qim = qim.scaled(dims[0], dims[1])
     qim = qim.scaled(nCols, nRows)
     #pixmap = QtGui.QPixmap()
@@ -2417,33 +2417,33 @@ def showIm_old(*args):
 def showIm(*args):
     # check and set input parameters
     if len(args) == 0:
-        print "showIm( matrix, range, zoom, label, nshades )"
-        print "  matrix is string. It should be the name of a 2D array."
-        print "  range is a two element tuple.  It specifies the values that "
-        print "    map to the min and max colormap values.  Passing a value "
-        print "    of 'auto' (default) sets range=[min,max].  'auto2' sets "
-        print "    range=[mean-2*stdev, mean+2*stdev].  'auto3' sets "
-        print "    range=[p1-(p2-p1)/8, p2+(p2-p1)/8], where p1 is the 10th "
-        print "    percientile value of the sorted matix samples, and p2 is "
-        print "    the 90th percentile value."
-        print "  zoom specifies the number of matrix samples per screen pixel."
-        print "    It will be rounded to an integer, or 1 divided by an "
-        print "    integer."
+        print("showIm( matrix, range, zoom, label, nshades )")
+        print("  matrix is string. It should be the name of a 2D array.")
+        print("  range is a two element tuple.  It specifies the values that ")
+        print("    map to the min and max colormap values.  Passing a value ")
+        print("    of 'auto' (default) sets range=[min,max].  'auto2' sets ")
+        print("    range=[mean-2*stdev, mean+2*stdev].  'auto3' sets ")
+        print("    range=[p1-(p2-p1)/8, p2+(p2-p1)/8], where p1 is the 10th ")
+        print("    percientile value of the sorted matix samples, and p2 is ")
+        print("    the 90th percentile value.")
+        print("  zoom specifies the number of matrix samples per screen pixel.")
+        print("    It will be rounded to an integer, or 1 divided by an ")
+        print("    integer.")
         #print "    A value of 'same' or 'auto' (default) causes the "
         #print "    zoom value to be chosen automatically to fit the image into"
         #print "    the current axes."
         #print "    A value of 'full' fills the axis region "
         #print "    (leaving no room for labels)."
-        print "  label - A string that is used as a figure title."
-        print "  NSHADES (optional) specifies the number of gray shades, "
-        print "    and defaults to the size of the current colormap. "
+        print("  label - A string that is used as a figure title.")
+        print("  NSHADES (optional) specifies the number of gray shades, ")
+        print("    and defaults to the size of the current colormap. ")
 
     if len(args) > 0:   # matrix entered
         matrix = numpy.array(args[0])
     #print 'showIm range %f %f' % (matrix.min(), matrix.max())
 
     if len(args) > 1:   # range entered
-        if isinstance(args[1], basestring):
+        if isinstance(args[1], str):
             if args[1] is "auto":
                 imRange = ( numpy.amin(matrix), numpy.amax(matrix) )
             elif args[1] is "auto2":
@@ -2456,10 +2456,10 @@ def showIm(*args):
                 p2 = scipy.stats.scoreatpercentile(numpy.hstack(matrix), 90)
                 imRange = (p1-(p2-p1)/8.0, p2+(p2-p1)/8.0)
             else:
-                print "Error: range of %s is not recognized." % args[1]
-                print "       please use a two element tuple or "
-                print "       'auto', 'auto2' or 'auto3'"
-                print "       enter 'showIm' for more info about options"
+                print("Error: range of %s is not recognized." % args[1])
+                print("       please use a two element tuple or ")
+                print("       'auto', 'auto2' or 'auto3'")
+                print("       enter 'showIm' for more info about options")
                 return
         else:
             imRange = args[1][0], args[1][1]
@@ -2483,24 +2483,24 @@ def showIm(*args):
 
     # create window
     #master = Tkinter.Tk()
-    master = Tkinter.Toplevel()
+    master = tkinter.Toplevel()
     master.title('showIm')
     canvas_width = matrix.shape[0] * zoom
     canvas_height = matrix.shape[1] * zoom
     master.geometry(str(canvas_width+20) + "x" + str(canvas_height+60) +
                     "+200+200")
     # put in top spacer
-    spacer = Tkinter.Label(master, text='').pack()
+    spacer = tkinter.Label(master, text='').pack()
     
     # create canvas
-    canvas = Tkinter.Canvas(master, width=canvas_width, height=canvas_height)
+    canvas = tkinter.Canvas(master, width=canvas_width, height=canvas_height)
     canvas.pack()
     #img = Image.fromarray(matrix)
     # FIX: shift matrix to 0.0-1.0 then to 0-255
     if (matrix < 0).any():
         matrix = matrix + math.fabs(matrix.min())
     matrix = (matrix / matrix.max()) * 255.0
-    print matrix.astype('uint8')[0,:]
+    print(matrix.astype('uint8')[0,:])
     img = PIL.Image.fromarray(matrix.astype('uint8'))
 
     # make colormap - works without range
@@ -2523,7 +2523,7 @@ def showIm(*args):
     #incr = int(numpy.ceil(float(imRange[1]-imRange[0]+1) / float(nshades)))
     incr = int(numpy.ceil(float(matrix.max()-matrix.min()+1) / float(nshades)))
     #colors = range(int(imRange[0]), int(imRange[1])+1, incr)
-    colors = range(int(matrix.min()), int(matrix.max())+1, incr)
+    colors = list(range(int(matrix.min()), int(matrix.max())+1, incr))
     colors[0] = 0
     colors[-1] = 255
     colctr = -1
@@ -2543,21 +2543,21 @@ def showIm(*args):
 
     # apply image to canvas
     imgPI = ImageTk.PhotoImage(img)    
-    canvas.create_image(0,0, anchor=Tkinter.NW, image=imgPI)
+    canvas.create_image(0,0, anchor=tkinter.NW, image=imgPI)
 
     # add labels
     rangeStr = 'Range: [%.1f, %.1f]' % (imRange[0], imRange[1])
-    rangeLabel = Tkinter.Label(master, text=rangeStr).pack()
+    rangeLabel = tkinter.Label(master, text=rangeStr).pack()
     dimsStr = 'Dims: [%d, %d] / %d' % (matrix.shape[0], matrix.shape[1], zoom)
-    dimsLabel = Tkinter.Label(master, text=dimsStr).pack()
+    dimsLabel = tkinter.Label(master, text=dimsStr).pack()
     
-    Tkinter.mainloop()
+    tkinter.mainloop()
 
 def corrDn(image = None, filt = None, edges = 'reflect1', step = (1,1), 
            start = (0,0), stop = None, result = None):
 
     if image == None or filt == None:
-        print 'Error: image and filter are required input parameters!'
+        print('Error: image and filter are required input parameters!')
         return
     else:
         image = image.copy()
@@ -2570,8 +2570,8 @@ def corrDn(image = None, filt = None, edges = 'reflect1', step = (1,1),
         stop = (image.shape[0], image.shape[1])
 
     if result == None:
-        rxsz = len(range(start[0], stop[0], step[0]))
-        rysz = len(range(start[1], stop[1], step[1]))
+        rxsz = len(list(range(start[0], stop[0], step[0])))
+        rysz = len(list(range(start[1], stop[1], step[1])))
         result = numpy.zeros((rxsz, rysz))
         
     if edges == 'circular':
@@ -2600,7 +2600,7 @@ def upConv(image = None, filt = None, edges = 'reflect1', step = (1,1),
            start = (0,0), stop = None, result = None):
 
     if image == None or filt == None:
-        print 'Error: image and filter are required input parameters!'
+        print('Error: image and filter are required input parameters!')
         return
     else:
         image = image.copy()
@@ -2619,7 +2619,7 @@ def upConv(image = None, filt = None, edges = 'reflect1', step = (1,1),
             filt = numpy.append(filt,0.0);
             filt = numpy.reshape(filt, (1, len(filt)))
         else:
-            print 'Even sized 2D filters not yet supported by upConv.'
+            print('Even sized 2D filters not yet supported by upConv.')
             return
 
     if stop == None and result == None:
@@ -2682,9 +2682,9 @@ def cconv2(*args):
     # Eero Simoncelli, 6/96.  Modified 2/97.  Python port by Rob Young, 8/15
     
     if len(args) < 2:
-        print 'Error: cconv2 requires two input matrices!'
-        print 'Usage: cconv2(matrix1, matrix2, center)'
-        print 'where center parameter is optional'
+        print('Error: cconv2 requires two input matrices!')
+        print('Usage: cconv2(matrix1, matrix2, center)')
+        print('where center parameter is optional')
         return
     else:
         a = numpy.array(args[0])
@@ -2702,7 +2702,7 @@ def cconv2(*args):
         large = b
         small = a
     else:
-        print 'Error: one matrix must be larger than the other in both dimensions!'
+        print('Error: one matrix must be larger than the other in both dimensions!')
         return
     
     ly = large.shape[0]
@@ -2748,8 +2748,8 @@ def clip(*args):
     # ported to Python by Rob Young, 8/15
     
     if len(args) == 0 or len(args) > 3:
-        print 'Usage: clip(im, minVal or Range, maxVal)'
-        print 'first input parameter is required'
+        print('Usage: clip(im, minVal or Range, maxVal)')
+        print('first input parameter is required')
         return
         
     im = numpy.array(args[0])
@@ -2758,7 +2758,7 @@ def clip(*args):
         minVal = 0;
         maxVal = 1;
     elif len(args) == 2:
-        if isinstance(args[1], (int, long, float)):
+        if isinstance(args[1], (int, float)):
             minVal = args[1]
             maxVal = args[1]+1
         else:
@@ -2769,7 +2769,7 @@ def clip(*args):
         maxVal = args[2]
         
     if maxVal < minVal:
-        print 'Error: maxVal cannot be less than minVal!'
+        print('Error: maxVal cannot be less than minVal!')
         return
 
     im[numpy.where(im < minVal)] = minVal
@@ -2781,7 +2781,7 @@ def clip(*args):
 # used in histo so we can unit test against matlab code
 # numpy version rounds to closest even number to remove bias
 def round(arr):
-    if isinstance(arr, (int, float, long)):
+    if isinstance(arr, (int, float)):
         arr = roundVal(arr)
     else:
         for i in range(len(arr)):
@@ -2822,8 +2822,8 @@ def histo(*args):
     #       called histo.c
 
     if len(args) == 0 or len(args) > 3:
-        print 'Usage: histo(mtx, nbins, binCtr)'
-        print 'first argument is required'
+        print('Usage: histo(mtx, nbins, binCtr)')
+        print('first argument is required')
         return
     else:
         mtx = args[0]
@@ -2844,7 +2844,7 @@ def histo(*args):
             tmpNbins = ( round(float(mx-binCtr) / float(binSize)) - 
                          round(float(mn-binCtr) / float(binSize)) )
             if tmpNbins != args[1]:
-                print 'Warning: Using %d bins instead of requested number (%d)' % (tmpNbins, args[1])
+                print('Warning: Using %d bins instead of requested number (%d)' % (tmpNbins, args[1]))
     else:
         binSize = float(mx-mn) / 101.0
 
@@ -2857,7 +2857,7 @@ def histo(*args):
     # numpy.histogram uses bin edges, not centers like Matlab's hist
     #bins = firstBin + binSize * numpy.array(range(tmpNbins+1))
     # compute bin edges
-    binsE = firstEdge + binSize * numpy.array(range(tmpNbins+1))
+    binsE = firstEdge + binSize * numpy.array(list(range(tmpNbins+1)))
     
     [N, X] = numpy.histogram(mtx, binsE)
 
@@ -2911,7 +2911,7 @@ def factorial(*args):
     # EPS, 11/02, Python port by Rob Young, 10/15
 
     # if scalar input make it a single element array
-    if isinstance(args[0], (int, long, float)):
+    if isinstance(args[0], (int, float)):
         num = numpy.array([args[0]])
     else:
         num = numpy.array(args[0])
@@ -2995,8 +2995,8 @@ def imGradient(*args):
     # Python port by Rob Young, 10/15
     
     if len(args) == 0 or len(args) > 2:
-        print 'Usage: imGradient(image, edges)'
-        print "'edges' argument is optional"
+        print('Usage: imGradient(image, edges)')
+        print("'edges' argument is optional")
     elif len(args) == 1:
         edges = "dont-compute"
     elif len(args) == 2:
@@ -3019,8 +3019,8 @@ def skew2(*args):
     #  MEAN (optional) and VAR (optional) make the computation faster.
 
     if len(args) == 0:
-        print 'Usage: skew2(matrix, mean, variance)'
-        print 'mean and variance arguments are optional'
+        print('Usage: skew2(matrix, mean, variance)')
+        print('mean and variance arguments are optional')
     else:
         mtx = numpy.array(args[0])
 
@@ -3060,8 +3060,8 @@ def upBlur(*args):
     # REQUIRED ARGS
     
     if len(args) == 0:
-        print 'Usage: upBlur(image, levels, filter)'
-        print 'first argument is required'
+        print('Usage: upBlur(image, levels, filter)')
+        print('first argument is required')
     else:
         im = numpy.array(args[0])
 
@@ -3080,7 +3080,7 @@ def upBlur(*args):
 
     #------------------------------------------------------------------
 
-    if isinstance(filt, basestring):
+    if isinstance(filt, str):
         filt = namedFilter(filt)
 
     if nlevs > 1:
@@ -3125,8 +3125,8 @@ def zconv2(*args):
     #----------------------------------------------------------------
     
     if len(args) < 2 or len(args) > 3:
-        print 'Usage: zconv2(matrix1, matrix2, center)'
-        print 'first two input parameters are required'
+        print('Usage: zconv2(matrix1, matrix2, center)')
+        print('first two input parameters are required')
     else:
         a = numpy.array(args[0])
         b = numpy.array(args[1])
@@ -3148,7 +3148,7 @@ def zconv2(*args):
         large = b
         small = a
     else:
-        print 'Error: one arg must be larger than the other in both dimensions!'
+        print('Error: one arg must be larger than the other in both dimensions!')
         return
         
     ly = large.shape[0]

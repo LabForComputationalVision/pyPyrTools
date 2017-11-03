@@ -1,6 +1,6 @@
 class struct( object ):
     def __init__( self, **kwargs ):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr( self, k, v )
 
 
@@ -65,7 +65,7 @@ def nbimage( data, vmin = None, vmax = None, vsym = False, saveas = None ):
     '''
     from IPython.display import display, Image
     from PIL.Image import fromarray
-    from StringIO import StringIO
+    from io import StringIO
     data = rerange( data, vmin, vmax, vsym )
     data = data.squeeze()
     # try to be smart
@@ -93,14 +93,14 @@ def nbimageLCVbak( data, vmin = None, vmax = None, vsym = False, saveas = None,
     '''
     from IPython.display import display, Image, HTML
     from PIL.Image import fromarray
-    from StringIO import StringIO
+    from io import StringIO
     css_styling()
     data = rerange( data, vmin, vmax, vsym )
     data = data.squeeze()
 
     # try to be smart
     if 3 <= data.shape[ 0 ] <= 4:
-        print 'transposing'
+        print('transposing')
         data = data.transpose( ( 1, 2, 0 ) )
 
     s = StringIO()
@@ -135,7 +135,7 @@ def nbimageLCVbak2( data, vmin = None, vmax = None, vsym = False, saveas = None,
     '''
     from IPython.display import display, Image, HTML
     from PIL.Image import fromarray
-    from StringIO import StringIO
+    from io import StringIO
     import base64
     from PyQt4 import QtGui
     from PyQt4 import QtCore
@@ -145,7 +145,7 @@ def nbimageLCVbak2( data, vmin = None, vmax = None, vsym = False, saveas = None,
     data = data.squeeze()
     # try to be smart
     if 3 <= data.shape[ 0 ] <= 4:
-        print 'transposing'
+        print('transposing')
         data = data.transpose( ( 1, 2, 0 ) )
     s = StringIO()
     fromarray( data ).save( s, 'png' )
@@ -157,13 +157,13 @@ def nbimageLCVbak2( data, vmin = None, vmax = None, vsym = False, saveas = None,
 
     matrix = numpy.require(data, numpy.uint8, 'C')
     (w, h) = matrix.shape
-    print matrix
+    print(matrix)
     qim = QtGui.QImage(matrix.data, w, h, QtGui.QImage.Format_Indexed8)
     qim.ndarray = matrix    # do we need this?
     
     # make colormap
     incr = (256/nshades)+1
-    colors = range(0,255,(256/nshades)+1)
+    colors = list(range(0,255,(256/nshades)+1))
     colors[-1] = 255
     colctr = -1
     for i in range(256):
@@ -216,7 +216,7 @@ def nbimageLCV( dlist, vmin = None, vmax = None, vsym = False, saveas = None,
     '''
     from IPython.display import display, Image, HTML
     from PIL.Image import fromarray
-    from StringIO import StringIO
+    from io import StringIO
     import base64
     from PyQt4 import QtGui
     from PyQt4 import QtCore
@@ -255,7 +255,7 @@ def nbimageLCV( dlist, vmin = None, vmax = None, vsym = False, saveas = None,
     
         # make colormap
         incr = (256/nshades)+1
-        colors = range(0,255,(256/nshades)+1)
+        colors = list(range(0,255,(256/nshades)+1))
         colors[-1] = 255
         colctr = -1
         for i in range(256):
@@ -325,7 +325,7 @@ def showIm( dlist, v = None, zoom = 1, title = "", nshades = 256, ncols = 1):
     '''
     from IPython.display import display, Image, HTML
     from PIL.Image import fromarray
-    from StringIO import StringIO
+    from io import StringIO
     import base64
     from PyQt4 import QtGui
     from PyQt4 import QtCore
@@ -353,9 +353,9 @@ def showIm( dlist, v = None, zoom = 1, title = "", nshades = 256, ncols = 1):
             vmin = p1-(p2-p1)/8.0
             vmax = p2+(p2-p1)/8.0
         else:
-            print "Error: range of %s is not recognized." % v
-            print "       please use a two element tuple or "
-            print "       'auto', 'auto2' or 'auto3'"
+            print("Error: range of %s is not recognized." % v)
+            print("       please use a two element tuple or ")
+            print("       'auto', 'auto2' or 'auto3'")
             return
 
         data = rerange( data, vmin, vmax, vsym )
@@ -377,7 +377,7 @@ def showIm( dlist, v = None, zoom = 1, title = "", nshades = 256, ncols = 1):
     
         # make colormap
         incr = (256/nshades)+1
-        colors = range(0,255,(256/nshades)+1)
+        colors = list(range(0,255,(256/nshades)+1))
         colors[-1] = 255
         colctr = -1
         for i in range(256):
