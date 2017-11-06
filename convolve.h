@@ -53,3 +53,6 @@ int internal_wrap_expand(image_type *image, image_type *filt, int x_fdim, int y_
 			 int x_start, int x_step, int x_stop, 
 			 int y_start, int y_step, int y_stop,
 			 image_type *result, int x_rdim, int y_rdim);
+void internal_pointop(double *im, double *res, int size, double *lut,
+		      int lutsize, double origin, double increment,
+		      int warnings);

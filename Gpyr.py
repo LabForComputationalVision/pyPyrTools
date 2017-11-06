@@ -1,8 +1,8 @@
-from Lpyr import Lpyr
-from namedFilter import namedFilter
-from maxPyrHt import maxPyrHt
+from .Lpyr import Lpyr
+from .namedFilter import namedFilter
+from .maxPyrHt import maxPyrHt
 import numpy
-from corrDn import corrDn
+from .corrDn import corrDn
 
 class Gpyr(Lpyr):
     filt = ''
@@ -13,8 +13,8 @@ class Gpyr(Lpyr):
     def __init__(self, *args):    # (image, height, filter, edges)
         self.pyrType = 'Gaussian'
         if len(args) < 1:
-            print "pyr = Gpyr(image, height, filter, edges)"
-            print "First argument (image) is required"
+            print("pyr = Gpyr(image, height, filter, edges)")
+            print("First argument (image) is required")
             return
         else:
             self.image = args[0]
@@ -22,10 +22,10 @@ class Gpyr(Lpyr):
         if len(args) > 2:
             filt = args[2]
             if not (filt.shape == 1).any():
-                print "Error: filt should be a 1D filter (i.e., a vector)"
+                print("Error: filt should be a 1D filter (i.e., a vector)")
                 return
         else:
-            print "no filter set, so filter is binom5"
+            print("no filter set, so filter is binom5")
             filt = namedFilter('binom5')
             if self.image.shape[0] == 1:
                 filt = filt.reshape(1,5)
@@ -40,8 +40,8 @@ class Gpyr(Lpyr):
             else:
                 self.height = args[1]
                 if self.height > maxHeight:
-                    print ( "Error: cannot build pyramid higher than %d levels"
-                            % (maxHeight) )
+                    print(( "Error: cannot build pyramid higher than %d levels"
+                            % (maxHeight) ))
                     return
         else:
             self.height = maxHeight
