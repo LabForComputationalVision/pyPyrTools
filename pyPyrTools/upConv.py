@@ -59,7 +59,7 @@ def upConv(image=None, filt=None, edges='reflect1', step=(1, 1),
                             filt.shape[1], filt.shape[0], start[1], step[1],
                             stop[1], start[0], step[0], stop[0],
                             result.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-                            stop[1], stop[0], edges)
+                            stop[1], stop[0], edges.encode('utf-8'))
         result = numpy.reshape(result, stop)
 
     return result

@@ -356,17 +356,20 @@ class Lpyr(pyramid):
             for i in pind:
                 pind[i] = self.band(i).shape
             urpos = llpos + pind
-            d_im = numpy.ones((numpy.max(urpos), numpy.max(urpos))) * 255
+            d_im = numpy.ones((int(numpy.max(urpos)), int(numpy.max(urpos)))) * 255/2.0
             
             # paste bands into image, (im-r1)*(nshades-1)/(r2-r1) + 1.5
             nshades = 256
             for bnum in range(nind):
                 mult = (nshades-1) / (pRange[bnum,1]-pRange[bnum,0])
-                d_im[llpos[bnum,0]:urpos[bnum,0], llpos[bnum,1]:urpos[bnum,1]]=(
+                d_im[int(llpos[bnum,0]):int(urpos[bnum,0]), int(llpos[bnum,1]):int(urpos[bnum,1])]=(
                     mult*self.band(bnum) + (1.5-mult*pRange[bnum,0]) )
             
             # FIX: need a mode to switch between above and below display
             if disp == 'nb':
                 JBhelpers.showIm(d_im[:self.band(0).shape[0]][:])
             elif disp == 'qt':
-                showIm(d_im[:self.band(0).shape[0]][:])
+                ll = max(abs(d_im.min()), abs(d_im.max()))
+                matplotlib.pyplot.imshow(d_im, vmin=-ll, vmax=ll)
+                # showIm(d_im[:self.band(0).shape[0]][:])
+                return d_im

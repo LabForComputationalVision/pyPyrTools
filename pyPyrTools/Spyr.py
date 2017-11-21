@@ -430,7 +430,6 @@ class Spyr(pyramid):
             # d_im[llpos[bnum,0]:urpos[bnum,0],
             #      llpos[bnum,1]:urpos[bnum,1]] = self.band(bnum)
 
-        print(d_im.max())
         if disp == 'qt':
             matplotlib.pyplot.imshow(d_im)
             # showIm(d_im[:self.pyrSize[0][0]*2,:])
