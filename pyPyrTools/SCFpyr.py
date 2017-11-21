@@ -60,9 +60,9 @@ class SCFpyr(SFpyr):
         # steering stuff:
 
         if nbands % 2 == 0:
-            harmonics = numpy.array(list(range(nbands/2))) * 2 + 1
+            harmonics = numpy.array(list(range(nbands//2))) * 2 + 1
         else:
-            harmonics = numpy.array(list(range((nbands-1)/2))) * 2
+            harmonics = numpy.array(list(range((nbands-1)//2))) * 2
 
         steermtx = steer2HarmMtx(harmonics,
                                  numpy.pi*numpy.array(list(range(nbands)))/nbands,
@@ -78,7 +78,7 @@ class SCFpyr(SFpyr):
                                      (dims[0]/2))
         angle = numpy.arctan2(yramp, xramp)
         log_rad = numpy.sqrt(xramp**2 + yramp**2)
-        log_rad[ctr[0]-1, ctr[1]-1] = log_rad[ctr[0]-1, ctr[1]-2]
+        log_rad[int(ctr[0]-1), int(ctr[1]-1)] = log_rad[int(ctr[0]-1), int(ctr[1]-2)]
         log_rad = numpy.log2(log_rad);
 
         ## Radial transition function (a raised cosine in log-frequency):
@@ -143,9 +143,9 @@ class SCFpyr(SFpyr):
             lostart = ctr - loctr
             loend = lostart + lodims
 
-            log_rad = log_rad[lostart[0]:loend[0], lostart[1]:loend[1]]
-            angle = angle[lostart[0]:loend[0], lostart[1]:loend[1]]
-            lodft = lodft[lostart[0]:loend[0], lostart[1]:loend[1]]
+            log_rad = log_rad[int(lostart[0]):int(loend[0]), int(lostart[1]):int(loend[1])]
+            angle = angle[int(lostart[0]):int(loend[0]), int(lostart[1]):int(loend[1])]
+            lodft = lodft[int(lostart[0]):int(loend[0]), int(lostart[1]):int(loend[1])]
             YIrcos = numpy.abs(numpy.sqrt(1.0 - Yrcos**2))
             log_rad_tmp = numpy.reshape(log_rad, 
                                         (1,log_rad.shape[0]*log_rad.shape[1]))
