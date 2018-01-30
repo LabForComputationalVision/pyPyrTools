@@ -28,6 +28,15 @@ pip install only been tested on Linux, there is no guarantee that it
 will work on other systems. Installing from source (see below) should
 work on OSX as well, but Windows is NOT supported.
 
+NOTE: You will also need to install PyQt (either PyQt4 or PyQt5), but
+I have often been unable to install either from pip and so it is not
+listed as a required package for pip's setup.py. I would like
+eventually to remove this requirement, but for the time being you will
+have to install it on your
+own. See
+[here for PyQt4](http://pyqt.sourceforge.net/Docs/PyQt4/installation.html) and
+[here for PyQt5](http://pyqt.sourceforge.net/Docs/PyQt5/installation.html).
+
 But if you want to install from source or pip doesn't work, you'll
 need to compile the associated C code yourself: assuming your path to
 python libraries is `/usr/local/anaconda2`, you would type:
