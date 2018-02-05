@@ -367,12 +367,8 @@ class Spyr(pyramid):
         # compute positions of subbands
         llpos = numpy.ones((nind,2));
 
-        if nbands == 2:
-            ncols = 1
-            nrows = 2
-        else:
-            ncols = int(numpy.ceil((nbands+1)/2))
-            nrows = int(numpy.ceil(nbands/2))
+        ncols = int(numpy.ceil((nbands+1)/2))
+        nrows = int(numpy.ceil(nbands/2))
 
         a = numpy.array(range(1-nrows, 1))
         b = numpy.zeros((1,ncols))[0]
