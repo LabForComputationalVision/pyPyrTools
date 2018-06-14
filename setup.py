@@ -4,11 +4,11 @@ from setuptools import setup, Extension
 
 setup(
     name='pyPyrTools',
-    version='0.2.1',
+    version='0.2.3',
     description='Python tools for multi-scale image processing, including Laplacian pyramids, Wavelets, and Steerable Pyramids',
     license='MIT',
     url='https://github.com/LabForComputationalVision/pyPyrTools',
-    author='Eero Simoncelli',
+    author='Eero Simoncelli, Rob Young, and William F. Broderick',
     author_email='eero.simoncelli@nyu.edu',
     keywords='multi-scale image-processing',
     packages=['pyPyrTools'],
