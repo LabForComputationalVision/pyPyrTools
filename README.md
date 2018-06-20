@@ -1,12 +1,12 @@
 # pyPyrTools
 
-A port of Eero Simoncelli's matlabPyrTools to Python.  This port does
+A Python 2.7 port of Eero Simoncelli's matlabPyrTools to Python.  This port does
 not attept to recreate all of the matlab code from matlabPyrTools.
 The goal is to create a Python interface for the C code at the heart
-of matlabPyrTools.
+of matlabPyrTools, which implements flexible convolution with subsampling and 
+multiple options for boundary-handling.
 
-All code should be considered a beta release.  By that we mean that it is being
-actively developed and tested.  You can find unit tests in
+All code should be considered a beta release. Unit tests are available in
 `TESTING/unitTests.py`.
 
 If you're using functions or parameters that do not have associated unit
@@ -17,11 +17,9 @@ unit tests.
 # Authors
 
 Rob Young and Eero Simoncelli, 7/13
-
 William Broderick, 6/17
 
 # Installation
-
 
 It's recommended you install from pip: `pip install pyPyrTools`. The
 pip install only been tested on Linux, there is no guarantee that it
