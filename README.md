@@ -1,3 +1,7 @@
+NOTE: This code is unmaintained and unsupported. See 
+[pyrtools](https://github.com/LabForComputationalVision/pyrtools) for a 
+maintained python 3 version of the tools here.
+
 # pyPyrTools
 
 A Python 2.7 port of Eero Simoncelli's matlabPyrTools to Python.  This port does
